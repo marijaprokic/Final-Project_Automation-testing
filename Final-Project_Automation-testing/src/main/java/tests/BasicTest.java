@@ -46,7 +46,16 @@ public abstract class BasicTest {
     }
 
     @AfterMethod
-    public void afterMethod() {
+    public void afterMethod(ITestResult result) {
+        if (ITestResult.FAILURE == result.getStatus())
+            try {
+                TakesScreenshot scrShot = ((TakesScreenshot) driver);
+                File SrcFile = scrShot.getScreenshotAs(OutputType.FILE);
+                File DestFile = new File("src/main/resources/screenshotfailure.png");
+                FileHandler.copy(SrcFile, DestFile);
+            } catch (Exception e) {
+                System.out.println("Exception while taking screenshot" + e.getMessage());
+            }
     }
 
     @AfterClass
